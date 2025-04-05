@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaBars, FaTimes, FaSearch, FaUser, FaUserPlus } from "react-icons/fa";
 import StoryView from "./Story/StoryView";
+import { API_URL } from "../config";
 
 const Header = () => {
   const [navbarCategories, setNavbarCategories] = useState([]);
@@ -10,7 +11,7 @@ const Header = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/header")
+      .get(`${API_URL}/header`)
       .then((response) => setNavbarCategories(response.data.navbar_categories))
       .catch((error) => console.error("Error fetching header data:", error));
   }, []);
@@ -31,7 +32,7 @@ const Header = () => {
 
           {/* Logo */}
           <img
-            src="http://127.0.0.1:8000/static/images/logoheader.png"
+            src={`${API_URL}/static/images/logoheader.png`}
             alt="Logo"
             className="h-10 mx-auto md:mx-0"
           />

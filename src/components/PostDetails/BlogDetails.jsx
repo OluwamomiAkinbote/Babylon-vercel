@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { API_URL } from "../config";// Replace with your actual API URL
+
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -25,7 +27,7 @@ const BlogDetails = () => {
     if (!slug) return;
 
     axios
-      .get(`http://127.0.0.1:8000/news/${slug}/`)
+      .get(`${API_URL}/news/${slug}/`) 
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
@@ -85,7 +87,7 @@ const BlogDetails = () => {
               <div className="flex items-center space-x-2 mb-2 sm:mb-0">
                 <div className="w-5 h-5 rounded-full bg-gray-200">
                   <img
-                    src="http://127.0.0.1:8000/static/images/logo2.png"
+                    src={`${API_URL}/static/images/logo2.png`}
                     alt="Author"
                     className="w-full h-full object-cover"
                   />
