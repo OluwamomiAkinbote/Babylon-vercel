@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Play, Pause, X } from 'lucide-react';
 import StoriesHeader from './StoriesHeader';
-import { API_URL } from '../config';
+import { API_URL } from '../../config';
 
 const StoryView = () => {
     const [stories, setStories] = useState([]);
