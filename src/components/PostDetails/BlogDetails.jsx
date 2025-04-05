@@ -1,14 +1,17 @@
+
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../config";
+
+import { API_URL } from "../config";// Replace with your actual API URL
 
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
-  const [advert, setAdvert] = useState("");
+  const [advert, setAdvert] = useState(""); // State for advert content
   const [error, setError] = useState(null);
-  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0); // State for media navigation
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString("en-US", {
@@ -26,11 +29,11 @@ const BlogDetails = () => {
     if (!slug) return;
 
     axios
-      .get(`${API_URL}/news/${slug}/`)
+      .get(`${API_URL}/news/${slug}/`) 
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
-          setAdvert(response.data.advert);
+          setAdvert(response.data.advert); // Fetch advert content
         } else {
           setError("Post not found.");
         }
@@ -46,10 +49,10 @@ const BlogDetails = () => {
   };
 
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
-  if (!post) return null;
+  if (!post) return null; // Removes loading text
 
+  // Handle whether media is a single object or array
   const mediaItems = Array.isArray(post.media) ? post.media : [post.media];
-  const currentMedia = mediaItems[currentMediaIndex];
 
   return (
     <div className="bg-white mt-32 font-robotoCondensed">
@@ -106,15 +109,15 @@ const BlogDetails = () => {
               {/* Media Display */}
               <div className="relative my-4 w-full">
                 {/* Display current media based on type */}
-                {currentMedia.type === "video" ? (
+                {mediaItems[currentMediaIndex].type === "video" ? (
                   <video
-                    src={`${API_URL}${currentMedia.media_url}`}
+                    src={mediaItems[currentMediaIndex].media_url}
                     controls
                     className="w-full h-auto max-h-[600px] object-cover"
                   ></video>
                 ) : (
                   <img
-                    src={`${API_URL}${currentMedia.media_url}`}
+                    src={mediaItems[currentMediaIndex].media_url}
                     alt={`Media ${currentMediaIndex + 1}`}
                     className="w-full h-auto max-h-[600px] object-cover"
                   />
@@ -122,9 +125,9 @@ const BlogDetails = () => {
               </div>
 
               {/* Caption for current media */}
-              {currentMedia.caption && (
+              {mediaItems[currentMediaIndex].caption && (
                 <div className="text-center text-sm text-gray-600 mt-2 italic">
-                  {currentMedia.caption}
+                  {mediaItems[currentMediaIndex].caption}
                 </div>
               )}
 
