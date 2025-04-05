@@ -44,6 +44,8 @@ const BlogDetails = () => {
       });
   }, [slug]);
 
+  
+
   const handleMediaChange = (index) => {
     setCurrentMediaIndex(index);
   };
@@ -51,8 +53,18 @@ const BlogDetails = () => {
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
   if (!post) return null; // Removes loading text
 
-  // Handle whether media is a single object or array
-  const mediaItems = Array.isArray(post.media) ? post.media : [post.media];
+  const mediaItems =
+  post.media && Array.isArray(post.media) && post.media.length > 0
+    ? post.media
+    : [
+        {
+          type: "image",
+          media_url: `${API_URL}/static/images/Breakingnews.png`,
+          caption: "Breaking News",
+        },
+      ];
+
+
 
   return (
     <div className="bg-white mt-32 font-robotoCondensed">
