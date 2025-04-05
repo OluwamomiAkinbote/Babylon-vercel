@@ -49,6 +49,7 @@ const BlogDetails = () => {
   if (!post) return null;
 
   const mediaItems = Array.isArray(post.media) ? post.media : [post.media];
+  const currentMedia = mediaItems[currentMediaIndex];
 
   return (
     <div className="bg-white mt-32 font-robotoCondensed">
@@ -105,15 +106,15 @@ const BlogDetails = () => {
               {/* Media Display */}
               <div className="relative my-4 w-full">
                 {/* Display current media based on type */}
-                {mediaItems[currentMediaIndex].type === "video" ? (
+                {currentMedia.type === "video" ? (
                   <video
-                    src={`${API_URL}${mediaItems[currentMediaIndex].media_url}`}
+                    src={`${API_URL}${currentMedia.media_url}`}
                     controls
                     className="w-full h-auto max-h-[600px] object-cover"
                   ></video>
                 ) : (
                   <img
-                    src={`${API_URL}${mediaItems[currentMediaIndex].media_url}`}
+                    src={`${API_URL}${currentMedia.media_url}`}
                     alt={`Media ${currentMediaIndex + 1}`}
                     className="w-full h-auto max-h-[600px] object-cover"
                   />
@@ -121,9 +122,9 @@ const BlogDetails = () => {
               </div>
 
               {/* Caption for current media */}
-              {mediaItems[currentMediaIndex].caption && (
+              {currentMedia.caption && (
                 <div className="text-center text-sm text-gray-600 mt-2 italic">
-                  {mediaItems[currentMediaIndex].caption}
+                  {currentMedia.caption}
                 </div>
               )}
 
