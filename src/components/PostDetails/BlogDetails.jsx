@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FacebookComment from "./FacebookComment";
-import { API_URL } from "../config"; 
-import OGSEO from "./OGSEO"; 
+import { API_URL } from "../config";
+import OGSEO from "./OGSEO";
 import ShareControls from "./ShareControls";
-
+import BlogMedia from "./BlogMedia";
 
 const currentUrl = window.location.href;
-
 
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
-  const [advert, setAdvert] = useState(""); // State for advert content
+  const [advert, setAdvert] = useState("");
   const [error, setError] = useState(null);
-  const [currentMediaIndex, setCurrentMediaIndex] = useState(0); // State for media navigation
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString("en-US", {
@@ -37,7 +36,7 @@ const BlogDetails = () => {
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
-          setAdvert(response.data.advert); // Fetch advert content
+          setAdvert(response.data.advert);
         } else {
           setError("Post not found.");
         }
@@ -48,29 +47,14 @@ const BlogDetails = () => {
       });
   }, [slug]);
 
-  const handleMediaChange = (index) => {
-    setCurrentMediaIndex(index);
-  };
-
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
-  if (!post) return null; // Removes loading text
-
-  const mediaItems =
-    post.media && Array.isArray(post.media) && post.media.length > 0
-      ? post.media
-      : [
-          {
-            type: "image",
-            media_url: `${API_URL}/static/images/Breakingnews.png`,
-            caption: "Breaking News",
-          },
-        ];
+  if (!post) return null;
 
   return (
     <>
       <OGSEO
         title={post.title}
-        description={advert.replace(/<[^>]+>/g, "").slice(0, 80)} // Clean & shorten
+        description={advert.replace(/<[^>]+>/g, "").slice(0, 80)}
         media={post.media}
       />
       <div className="bg-white font-robotoCondensed">
@@ -103,7 +87,7 @@ const BlogDetails = () => {
               {post.title}
             </h2>
 
-            {/* Author & Date Info */}
+            {/* Author & Date */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center font-poppins">
               <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium">
                 <div className="flex items-center space-x-2 mb-2 sm:mb-0">
@@ -125,76 +109,16 @@ const BlogDetails = () => {
               </div>
             </div>
 
-            {/* Media Gallery */}
-            {mediaItems && mediaItems.length > 0 && (
-              <div>
-                {/* Media Display */}
-                <div className="relative my-4 w-full">
-                  {/* Display current media based on type */}
-                  {mediaItems[currentMediaIndex].type === "video" ? (
-                    <video
-                      src={mediaItems[currentMediaIndex].media_url}
-                      controls
-                      className="w-full h-auto max-h-[600px] object-cover"
-                    ></video>
-                  ) : (
-                    <img
-                      src={mediaItems[currentMediaIndex].media_url}
-                      alt={`Media ${currentMediaIndex + 1}`}
-                      className="w-full h-auto max-h-[600px] object-cover"
-                    />
-                  )}
-                </div>
+            {/* Media */}
+            <BlogMedia
+              media={post.media}
+              currentMediaIndex={currentMediaIndex}
+              onMediaChange={setCurrentMediaIndex}
+            />
 
-                {/* Caption for current media */}
-                {mediaItems[currentMediaIndex].caption && (
-                  <div className="text-center text-sm text-gray-600 mt-2 italic">
-                    {mediaItems[currentMediaIndex].caption}
-                  </div>
-                )}
-
-                {/* Controls and Index Below Media */}
-                {mediaItems.length > 1 && (
-                  <div className="flex justify-between items-center mt-2">
-                    {/* Media Index on the Left */}
-                    <div className="text-gray-800 text-sm">
-                      {`Media ${currentMediaIndex + 1} of ${mediaItems.length}`}
-                    </div>
-
-                    {/* Pagination Controllers on the Right */}
-                    <div className="flex space-x-2">
-                      {/* Previous Button */}
-                      <button
-                        onClick={() => handleMediaChange(currentMediaIndex - 1)}
-                        className={`text-green-800 hover:text-green-600 px-3 py-1 ${
-                          currentMediaIndex === 0
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        disabled={currentMediaIndex === 0}
-                      >
-                        <i className="fas fa-chevron-left"></i>
-                      </button>
-                      {/* Next Button */}
-                      <button
-                        onClick={() => handleMediaChange(currentMediaIndex + 1)}
-                        className={`text-green-800 hover:text-green-600 px-3 py-1 ${
-                          currentMediaIndex === mediaItems.length - 1
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        disabled={currentMediaIndex === mediaItems.length - 1}
-                      >
-                        <i className="fas fa-chevron-right"></i>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
+            {/* Share Controls */}
             <div>
-                <ShareControls
+              <ShareControls
                 title={post.title}
                 url={window.location.href}
                 description={advert.replace(/<[^>]+>/g, "").slice(0, 120)}
@@ -204,12 +128,10 @@ const BlogDetails = () => {
                     : `${API_URL}/static/images/Breakingnews.png`
                 }
               />
-
-
             </div>
 
-            {/* Blog Content with Styled First Letter */}
-            <div id="contentContainer"  className="py-0 overflow-hidden my-8">
+            {/* Content */}
+            <div id="contentContainer" className="py-0 overflow-hidden my-8">
               <p
                 className="leading-relaxed text-lg md:text-xl text-gray-800"
                 style={{ maxWidth: "1050px", margin: "auto", lineHeight: "1.75" }}
@@ -222,18 +144,14 @@ const BlogDetails = () => {
               </p>
             </div>
 
-            {/* Advert & Shop Section Placeholder */}
-            <div className="shop my-8">{/* Include Shop Component Here */}</div>
-
-            {/* Comments Section */}
-            <div className="mt-6"> <FacebookComment url={currentUrl} /></div>
+            {/* Comments */}
+            <div className="mt-6">
+              <FacebookComment url={currentUrl} />
+            </div>
           </div>
 
-          {/* Sidebar with Related Posts */}
-          <div>
-            {/* Sidebar Ad & Related Posts */}
-            <div className="mt-4">{/* Include Sidebar Component Here */}</div>
-          </div>
+          {/* Sidebar Placeholder */}
+          <div className="mt-4">{/* Include Sidebar Component */}</div>
         </div>
       </div>
     </>
