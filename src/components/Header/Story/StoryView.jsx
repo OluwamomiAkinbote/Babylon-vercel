@@ -119,38 +119,41 @@ const StoryView = () => {
                     </div>
 
                     {/* Media Display */}
-                    {currentMedia.media.endsWith('.mp4') ? (
-                        <video
-                            key={currentMedia.id}
-                            className="w-full h-full object-cover"
-                            autoPlay
-                            muted={isMuted}
-                            controls={false}
-                            onLoadedMetadata={(e) => {
-                                handleVideoDuration(e);
-                                setVideoProgress(0);
-                                setCurrentTime(0);
-                            }}
-                            onTimeUpdate={(e) => {
-                                const current = e.target.currentTime;
-                                const total = e.target.duration;
-                                setVideoProgress((current / total) * 100);
-                                setCurrentTime(current);
-                            }}
-                            onEnded={nextMedia}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <source src={currentMedia.media} type="video/mp4" />
-                        </video>
-                    ) : (
-                        <img
-                            key={currentMedia.id}
-                            src={currentMedia.media}
-                            alt="story"
-                            className="w-full h-full object-cover"
-                            onLoad={() => setMediaDuration(7)}
-                        />
-                    )}
+                    <div className="w-full h-full flex justify-center items-center overflow-hidden">
+                        {currentMedia.media.endsWith('.mp4') ? (
+                            <video
+                                key={currentMedia.id}
+                                className="max-w-full max-h-full object-contain"
+                                autoPlay
+                                muted={isMuted}
+                                controls={false}
+                                onLoadedMetadata={(e) => {
+                                    handleVideoDuration(e);
+                                    setVideoProgress(0);
+                                    setCurrentTime(0);
+                                }}
+                                onTimeUpdate={(e) => {
+                                    const current = e.target.currentTime;
+                                    const total = e.target.duration;
+                                    setVideoProgress((current / total) * 100);
+                                    setCurrentTime(current);
+                                }}
+                                onEnded={nextMedia}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <source src={currentMedia.media} type="video/mp4" />
+                            </video>
+                        ) : (
+                            <img
+                                key={currentMedia.id}
+                                src={currentMedia.media}
+                                alt="story"
+                                className="max-w-full max-h-full object-contain"
+                                onLoad={() => setMediaDuration(7)}
+                            />
+                        )}
+                    </div>
+
 
                     {/* Prev Arrow */}
                     <button
