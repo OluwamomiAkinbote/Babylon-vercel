@@ -1,11 +1,11 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { API_URL } from '../../config'; // Import from config
 
 const generateThumbnail = async (videoUrl) => {
     return new Promise((resolve, reject) => {
         const video = document.createElement('video');
-        video.src = videoUrl.includes('http') ? videoUrl : `${API_URL}${videoUrl}`;
+        video.src = videoUrl;
         video.crossOrigin = 'anonymous';
         video.currentTime = 5;
 
@@ -48,18 +48,10 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
                             (media) => /\.(jpg|jpeg|png|gif|webp|bmp|svg|tiff)$/i.test(media.media)
                         )?.media;
 
-                        updatedThumbnails[story.id] = fallbackImage 
-                            ? fallbackImage.includes('http') 
-                                ? fallbackImage 
-                                : `${API_URL}${fallbackImage}`
-                            : '/default-placeholder.png';
+                        updatedThumbnails[story.id] = fallbackImage || '/default-placeholder.png'; // Fallback image or placeholder
                     }
                 } else {
-                    updatedThumbnails[story.id] = firstMedia 
-                        ? firstMedia.includes('http') 
-                            ? firstMedia 
-                            : `${API_URL}${firstMedia}`
-                        : '/default-placeholder.png';
+                    updatedThumbnails[story.id] = firstMedia; // Use the first media directly if it's an image
                 }
             }
             setThumbnails(updatedThumbnails);
@@ -136,18 +128,15 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
                             className="px-2 flex flex-col items-center cursor-pointer transition transform"
                         >
                             <div className="w-20 h-20 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-green-500">
-                                <img 
-                                    src={thumbnail} 
-                                    alt={story.title} 
-                                    className="w-full h-full object-cover" 
-                                    onError={(e) => {
-                                        e.target.src = '/default-placeholder.png';
-                                    }}
-                                />
+                                <img src={thumbnail} alt={story.title} className="w-full h-full object-cover" />
                             </div>
-                            <p className="text-md font-semibold text-center mt-2 sm:whitespace-normal sm:break-words">
-                                {truncateTitle(story.title)}
-                            </p>
+                            <div className="max-w-[120px] mx-auto px-1 text-center">
+                                <p className="text-sm font-semibold leading-snug break-words">
+                                    {story.title}
+                                </p>
+                            </div>
+
+
                         </div>
                     );
                 })}
