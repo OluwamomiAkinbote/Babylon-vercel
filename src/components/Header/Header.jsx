@@ -31,11 +31,13 @@ const Header = () => {
           </div>
 
           {/* Logo */}
-          <img
-            src={`${API_URL}/static/images/logoheader.png`}
-            alt="Logo"
-            className="h-10 mx-auto md:mx-0"
-          />
+          <a href="/" className="block">
+            <img
+              src={`${API_URL}/static/images/logoheader.png`}
+              alt="Newstropy Logo"
+              className="h-10 mx-auto md:mx-0"
+            />
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6 uppercase font-bold text-sm">

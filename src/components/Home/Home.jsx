@@ -8,22 +8,24 @@ import SportTechNews from "./SportTechNews";
 
 const Home = () => {
   return (
-      <>
-        <div className="font-barlow">
-          <Hero />
-        </div>
+
+      <div className="md:mx-12 ">
+              <div className="font-barlow">
+                <Hero />
+              </div>
+              
+              <div className="font-barlow">
+                <LatestNews />
+              </div>
         
-        <div className="font-barlow">
-          <LatestNews />
-        </div>
-  
-        <div className="">
-          <GlobalNews />
-        </div>
-        <div className="">
-          <SportTechNews />
-        </div>
-      </>
+              <div className="">
+                <GlobalNews />
+              </div>
+              <div className="">
+                <SportTechNews />
+              </div>
+
+      </div>
   );
 };
 
