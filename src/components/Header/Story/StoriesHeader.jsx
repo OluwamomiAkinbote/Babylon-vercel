@@ -55,7 +55,7 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
     }
 
     return (
-        <div className="relative p-4 font-robotoCondensed mt-20 mx-12">
+        <div className="relative p-4 font-robotoCondensed mt-20 mx-2">
             <div className="flex items-center justify-between mb-4">
                 <h1 className="md:text-2xl text-lg font-bold">Latest Stories</h1>
 
