@@ -49,7 +49,7 @@ const Hero = () => {
 
   return (
     <section className="relative">
-      <div className="  grid grid-cols-1 md:grid-cols-3 gap-2 mt-20">
+      <div className="  grid grid-cols-1 md:grid-cols-3 gap-2">
         <div className="hero col-span-2">
           <div className="relative font-barlow">
             {/* Carousel Container */}
