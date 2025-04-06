@@ -4,6 +4,7 @@ import axios from "axios";
 import FacebookComment from "./FacebookComment";
 import { API_URL } from "../config"; 
 import OGSEO from "./OGSEO"; 
+import ShareControls from "./ShareControls";
 
 
 const currentUrl = window.location.href;
@@ -72,7 +73,7 @@ const BlogDetails = () => {
         description={advert.replace(/<[^>]+>/g, "").slice(0, 80)} // Clean & shorten
         media={post.media}
       />
-      <div className="bg-white font-robotoCondensed mx-12">
+      <div className="bg-white font-robotoCondensed">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 overflow-hidden">
           <div className="p-2 sm:col-span-2 overflow-hidden">
             {/* Breadcrumb */}
@@ -192,8 +193,23 @@ const BlogDetails = () => {
               </div>
             )}
 
+            <div>
+                <ShareControls
+                title={post.title}
+                url={window.location.href}
+                description={advert.replace(/<[^>]+>/g, "").slice(0, 120)}
+                media={
+                  post.media && post.media.length > 0
+                    ? post.media[0].media_url
+                    : `${API_URL}/static/images/Breakingnews.png`
+                }
+              />
+
+
+            </div>
+
             {/* Blog Content with Styled First Letter */}
-            <div id="contentContainer" className="py-0 overflow-hidden my-8">
+            <div id="contentContainer"  className="py-0 overflow-hidden my-8">
               <p
                 className="leading-relaxed text-lg md:text-xl text-gray-800"
                 style={{ maxWidth: "1050px", margin: "auto", lineHeight: "1.75" }}
