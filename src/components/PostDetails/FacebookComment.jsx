@@ -20,7 +20,7 @@ const FacebookComment = ({ url }) => {
   }, []); // Empty dependency array to load the script only once
 
   return (
-    <div className="mx-12 mt-8 bg-gray-100 p-4">
+    <div className="mt-8 bg-gray-100 p-4">
       <p className="mb-6">
         By commenting, you agree to our{' '}
         <a href="/privacy-policy" className="text-blue-500">
