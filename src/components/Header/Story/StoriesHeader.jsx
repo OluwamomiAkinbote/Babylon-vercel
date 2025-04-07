@@ -54,6 +54,9 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
         return <div className="text-white text-center">Loading stories...</div>;
     }
 
+    // Sort stories by date (newest to oldest)
+    const sortedStories = [...stories].sort((a, b) => new Date(b.date) - new Date(a.date));
+
     return (
         <div className="relative p-4 font-robotoCondensed mt-20 mx-2">
             <div className="flex items-center justify-between mb-4">
@@ -86,7 +89,7 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
                 className="flex overflow-x-auto space-x-2 md:space-x-4 scrollbar-hide"
                 onScroll={checkScrollPosition}
             >
-                {stories.map((story) => {
+                {sortedStories.map((story) => {
                     const thumb = thumbnails[story.id];
                     const mediaType = thumb?.type || 'image';
                     const mediaSrc = thumb?.src || '/default-placeholder.png';

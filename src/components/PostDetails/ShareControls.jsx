@@ -55,7 +55,7 @@ const ShareControls = ({ title, url, contentRef }) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-start mb-2 space-x-4 relative">
+    <div className="flex flex-wrap items-center justify-start mb-2 space-x-4 relative mt-6">
       {/* Share Button */}
       <div className="relative">
         <button
