@@ -20,7 +20,7 @@ const Footer = () => {
 
                     {/* Highlights Section */}
                     <div>
-                        <h3 className="text-green-600 font-semibold mb-4">Focus Areas</h3>
+                        <h3 className="text-green-600 font-semibold mb-4">What we do</h3>
                         <p className="text-sm text-gray-600">
                             We deliver insightful coverage on key topics — from Nigeria to global happenings, sports, and business trends.
                         </p>

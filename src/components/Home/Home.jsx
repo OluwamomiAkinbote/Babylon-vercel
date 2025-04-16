@@ -1,3 +1,4 @@
+import FeaturedCategories from "./FeaturedCategories";
 import GlobalNews from "./GlobalNews";
 import Hero from "./Hero";
 import LatestNews from "./LatestNews";
@@ -16,6 +17,10 @@ const Home = () => {
               
               <div className="font-barlow">
                 <LatestNews />
+              </div>
+
+              <div className="font-robotoCondensed">
+                <FeaturedCategories />
               </div>
         
               <div className="">
