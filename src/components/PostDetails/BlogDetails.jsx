@@ -12,6 +12,7 @@ const currentUrl = window.location.href;
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
+  const [seoData, setSeoData] = useState(null);
   const [advert, setAdvert] = useState("");
   const [error, setError] = useState(null);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
@@ -32,10 +33,11 @@ const BlogDetails = () => {
     if (!slug) return;
 
     axios
-      .get(`${API_URL}/news/${slug}/`)
+      .get(`${API_URL}/blog/${slug}/`)  
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
+          setSeoData(response.data.seo);  
           setAdvert(response.data.advert);
         } else {
           setError("Post not found.");
@@ -52,11 +54,7 @@ const BlogDetails = () => {
 
   return (
     <>
-      <OGSEO
-        title={post.title}
-        description={advert.replace(/<[^>]+>/g, "").slice(0, 80)}
-        media={post.media}
-      />
+      <OGSEO seoData={seoData} />
       <div className="bg-white font-robotoCondensed">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 overflow-hidden">
           <div className="p-2 sm:col-span-2 overflow-hidden">
