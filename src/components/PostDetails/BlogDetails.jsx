@@ -33,7 +33,7 @@ const BlogDetails = () => {
     if (!slug) return;
 
     axios
-      .get(`${API_URL}/blog/${slug}/`)  
+      .get(`${API_URL}/news/${slug}/`)  
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
