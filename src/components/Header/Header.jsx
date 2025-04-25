@@ -19,28 +19,57 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-white border-b border-green-600 shadow-sm z-50 font-robotoCondensed">
-        <div className="container mx-auto flex justify-between items-center p-4">
-          {/* Mobile Menu Toggle */}
-          <div className="flex md:hidden items-center space-x-4">
-            <button className="text-green-600">
-              <FaBars size={24} onClick={() => setMenuOpen(!menuOpen)} />
-            </button>
-            <button className="text-green-600">
-              <FaSearch size={24} />
-            </button>
-          </div>
+        <div className="container mx-auto flex justify-between items-center p-4 md:hidden">
+          {/* Mobile Header */}
+          <div className="flex items-center justify-between w-full">
+            {/* Logo */}
+            <a href="/" className="flex-shrink-0">
+              <img
+                src={`${API_URL}/static/images/logoheader.png`}
+                alt="Newstropy Logo"
+                className="h-10"
+              />
+            </a>
 
+            {/* Auth Centered */}
+            <div className="flex flex-col items-center justify-center flex-grow">
+              <div className="flex space-x-3">
+                <a href="/signin" className="flex flex-col items-center text-green-600">
+                  <FaUser size={20} />
+                  <span className="text-xs text-gray-700">Sign In</span>
+                </a>
+                <a href="/register" className="flex flex-col items-center text-green-600">
+                  <FaUserPlus size={20} />
+                  <span className="text-xs text-gray-700">Register</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Search & Menu */}
+            <div className="flex space-x-4 items-center">
+              <button className="text-green-600">
+                <FaSearch size={20} />
+              </button>
+              <button className="text-green-600" onClick={() => setMenuOpen(!menuOpen)}>
+                <FaBars size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:flex justify-between items-center px-4 py-2">
           {/* Logo */}
-          <a href="/" className="block">
+          <a href="/">
             <img
               src={`${API_URL}/static/images/logoheader.png`}
               alt="Newstropy Logo"
-              className="h-10 mx-auto md:mx-0"
+              className="h-12"
             />
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 uppercase font-bold text-sm">
+          {/* Categories */}
+          <nav className="flex items-center space-x-6 uppercase font-bold text-sm">
             {navbarCategories.slice(0, categoryLimit).map((category, index) => (
               <a
                 key={index}
@@ -68,18 +97,8 @@ const Header = () => {
             )}
           </nav>
 
-          {/* Desktop Search Bar (Styled like LinkedIn) */}
-          <div className="hidden md:flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-1 space-x-2">
-            <FaSearch className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-transparent focus:outline-none text-gray-800"
-            />
-          </div>
-
-          {/* Auth Buttons (Desktop) */}
-          <div className="hidden md:flex items-center space-x-6">
+          {/* Auth */}
+          <div className="flex items-center space-x-6">
             <div className="flex flex-col items-center">
               <a href="/signin" className="text-green-600">
                 <FaUser size={24} />
@@ -93,9 +112,19 @@ const Header = () => {
               <p className="text-gray-800 text-sm">Register</p>
             </div>
           </div>
+
+          {/* Search */}
+          <div className="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-1 space-x-2">
+            <FaSearch className="text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-transparent focus:outline-none text-gray-800"
+            />
+          </div>
         </div>
 
-        {/* Mobile Fullscreen Menu */}
+        {/* Mobile Menu Overlay */}
         {menuOpen && (
           <div className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center z-50">
             <button
@@ -105,8 +134,8 @@ const Header = () => {
               <FaTimes size={30} />
             </button>
 
-            {/* Sign In & Register Side by Side (Mobile) */}
-            <div className="flex space-x-6 mt-6">
+            {/* Auth Buttons in Mobile Menu */}
+            <div className="sm: hidden flex space-x-6 mt-6">
               <div className="flex flex-col items-center">
                 <a href="/signin" className="text-white">
                   <FaUser size={30} />
@@ -138,7 +167,7 @@ const Header = () => {
         )}
       </header>
 
-      {/* Story View Below Header */}
+      {/* Stories */}
       <StoryView />
     </>
   );

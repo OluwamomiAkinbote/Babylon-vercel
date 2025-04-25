@@ -37,8 +37,8 @@ const FeaturedCategories = () => {
           <div key={category} className="bg-white p-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-semibold text-gray-900">{category}</h2>
-              <a href="#" className="text-blue-600 hover:text-blue-700">
+              <h2 className="text-xl font-medium text-gray-900">{category}</h2>
+              <a href="#" className="text-green-600 hover:text-blue-700">
                 <ChevronRight size={26} />
               </a>
             </div>
@@ -55,7 +55,7 @@ const FeaturedCategories = () => {
                 />
                 <a
                   href={`/news/${posts[0].slug}`}
-                  className="text-lg font-semibold text-gray-900 hover:underline block"
+                  className="text-lg font-medium mb-2 text-gray-800 hover:underline block"
                 >
                   {posts[0].title}
                 </a>
@@ -65,11 +65,11 @@ const FeaturedCategories = () => {
 
             {/* Next 2 posts */}
             <div className="space-y-3">
-              {posts.slice(1, 3).map(post => (
+              {posts.slice(1, 2).map(post => (
                 <div key={post.id}>
                   <a
                     href={`/news/${post.slug}`}
-                    className="text-lg font-bold text-gray-800 hover:underline block"
+                    className="text-lg font-medium mb-2 text-gray-800 hover:underline block"
                   >
                     {post.title}
                   </a>
