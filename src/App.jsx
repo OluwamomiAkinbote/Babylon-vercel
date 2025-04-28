@@ -1,7 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Home/Layout";
 import Home from "./components/Home/Home";
-import BlogDetails from "./components/PostDetails/BlogDetails"; // Import BlogDetails
+import BlogDetails from "./components/PostDetails/BlogDetails";
+import SignIn from "./components/NewsUser/SignIn";
+import RegisterStepOne from "./components/NewsUser/RegisterStepOne";
 
 function App() {
     return (
@@ -9,6 +11,8 @@ function App() {
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="news/:slug" element={<BlogDetails />} />
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/register/step-one" element={<RegisterStepOne />} />
             </Route>
         </Routes>
     );

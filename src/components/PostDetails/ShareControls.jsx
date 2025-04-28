@@ -1,150 +1,235 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const ShareControls = ({ title, url, contentRef }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showShareDropdown, setShowShareDropdown] = useState(false);
+  const [showFontDropdown, setShowFontDropdown] = useState(false);
+  const [showSizeDropdown, setShowSizeDropdown] = useState(false);
   const [copied, setCopied] = useState(false);
   const [currentFontIndex, setCurrentFontIndex] = useState(0);
-  const [currentTextSizeIndex, setCurrentTextSizeIndex] = useState(1);
+  const [currentTextSizeIndex, setCurrentTextSizeIndex] = useState(2); // Default to "Large"
   const dropdownRef = useRef(null);
+  const fontButtonRef = useRef(null);
+  const sizeButtonRef = useRef(null);
   const shareButtonRef = useRef(null);
 
-  const fonts = ["Poppins", "Georgia", "Arial", "Roboto", "Helvetica", "Times New Roman"];
-  const textSizes = ["text-sm", "text-base", "text-lg", "text-xl"];
+  const fonts = [
+    { name: "Roboto Condensed", value: "'Roboto Condensed', sans-serif" },
+    { name: "Inter", value: "'Inter', sans-serif" },
+    { name: "Georgia", value: "Georgia, serif" },
+    { name: "Arial", value: "Arial, sans-serif" },
+    { name: "Times New Roman", value: "'Times New Roman', serif" },
+    { name: "Courier New", value: "'Courier New', monospace" }
+  ];
+
+  const textSizes = [
+    { name: "Small", class: "text-sm md:text-sm" },
+    { name: "Normal", class: "text-base md:text-base" },
+    { name: "Large", class: "text-lg md:text-lg" },
+    { name: "Extra Large", class: "text-xl md:text-xl" },
+    { name: "XX Large", class: "text-2xl md:text-2xl" }
+  ];
+
+  useEffect(() => {
+    const savedFontIndex = localStorage.getItem('fontPreference');
+    const savedSizeIndex = localStorage.getItem('sizePreference');
+    
+    if (savedFontIndex !== null && contentRef?.current) {
+      const index = parseInt(savedFontIndex);
+      setCurrentFontIndex(index);
+      contentRef.current.style.fontFamily = fonts[index].value;
+    }
+    
+    if (savedSizeIndex !== null && contentRef?.current) {
+      const index = parseInt(savedSizeIndex);
+      setCurrentTextSizeIndex(index);
+      contentRef.current.classList.add(textSizes[index].class.split(' '));
+    }
+  }, []);
 
   const handleCopy = () => {
-    const textToCopy = `${title}\n${url}`;
-    navigator.clipboard.writeText(textToCopy).then(() => {
+    navigator.clipboard.writeText(`${title}\n${url}`).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const toggleDropdown = () => {
-    setShowDropdown(prev => !prev);
+  const handleClickOutside = (e) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (!shareButtonRef.current.contains(e.target)) setShowShareDropdown(false);
+      if (!fontButtonRef.current.contains(e.target)) setShowFontDropdown(false);
+      if (!sizeButtonRef.current.contains(e.target)) setShowSizeDropdown(false);
+    }
   };
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target) &&
-        !shareButtonRef.current.contains(e.target)
-      ) {
-        setShowDropdown(false);
-      }
-    };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const changeFont = () => {
-    const nextIndex = (currentFontIndex + 1) % fonts.length;
-    setCurrentFontIndex(nextIndex);
+  const changeFont = (index) => {
+    setCurrentFontIndex(index);
+    setShowFontDropdown(false);
     if (contentRef?.current) {
-      contentRef.current.style.fontFamily = fonts[nextIndex];
+      contentRef.current.style.fontFamily = fonts[index].value;
+      localStorage.setItem('fontPreference', index);
     }
   };
 
-  const changeTextSize = () => {
-    const nextIndex = (currentTextSizeIndex + 1) % textSizes.length;
+  const changeTextSize = (index) => {
+    setCurrentTextSizeIndex(index);
+    setShowSizeDropdown(false);
     if (contentRef?.current) {
-      contentRef.current.classList.remove(...textSizes);
-      contentRef.current.classList.add(textSizes[nextIndex]);
+      textSizes.forEach(size => {
+        size.class.split(' ').forEach(cls => {
+          contentRef.current.classList.remove(cls);
+        });
+      });
+      textSizes[index].class.split(' ').forEach(cls => {
+        contentRef.current.classList.add(cls);
+      });
+      localStorage.setItem('sizePreference', index);
     }
-    setCurrentTextSizeIndex(nextIndex);
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-start mb-2 space-x-4 relative mt-6">
+    <div className="flex flex-wrap items-center gap-3 mb-4 mt-6">
       {/* Share Button */}
       <div className="relative">
         <button
           ref={shareButtonRef}
-          onClick={toggleDropdown}
-          className="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base"
+          onClick={() => setShowShareDropdown(!showShareDropdown)}
+          className="p-2 bg-gray-800 text-white rounded-sm flex items-center gap-2 hover:bg-gray-900 transition-colors"
+          aria-label="Share options"
         >
           <i className="fas fa-share-alt"></i>
-          <span className="ml-2">Share</span>
+          <span className="font-semibold text-sm">Share</span>
         </button>
-      </div>
 
-      {/* Font-Size Change Button */}
-      <div className="relative group">
-        <button
-          onClick={changeFont}
-          className="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base"
-        >
-          <i className="fas fa-font mr-2"></i>
-        </button>
-        <div className="absolute hidden group-hover:block whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">
-          Change Font
-        </div>
-      </div>
-
-      {/* Text Size Change Button */}
-      <div className="relative group">
-        <button
-          onClick={changeTextSize}
-          className="px-4 py-2 bg-black border border-gray-700 text-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-75 transition ease-in-out duration-200 text-xs sm:text-sm md:text-base"
-        >
-          <i className="fas fa-text-height mr-2"></i>
-        </button>
-        <div className="absolute hidden group-hover:block whitespace-nowrap top-full left-0 mt-1 px-2 py-1 bg-black text-gray-50 text-xs rounded-md shadow-md">
-          Change Text Size
-        </div>
-      </div>
-
-      {/* Share Dropdown */}
-      {showDropdown && (
-        <div
-          ref={dropdownRef}
-          className="absolute mx-4 left-0 top-full mt-2 w-44 bg-white shadow-md rounded border border-gray-200 z-10"
-        >
-          <div className="p-2 text-xs">
+        {showShareDropdown && (
+          <div
+            ref={dropdownRef}
+            className="absolute left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-400 z-10 py-1 flex flex-col "
+          >
             <a
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-4 py-2 text-blue-500 hover:bg-blue-100"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label="Share on Twitter"
             >
-              <i className="fab fa-x-twitter text-xs mr-2"></i> X(Twitter)
+              <i className="fab fa-twitter mr-2 text-xl" />
+              <span className="text-sm">Twitter</span>
             </a>
             <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(title)}`}
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-4 py-2 text-blue-600 hover:bg-blue-100"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label="Share on Facebook"
             >
-              <i className="fab fa-facebook-f text-xs mr-2"></i> Facebook
+              <i className="fab fa-facebook mr-2 text-xl" />
+              <span className="text-sm">Facebook</span>
             </a>
             <a
-              href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-4 py-2 text-blue-700 hover:bg-blue-100"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label="Share on WhatsApp"
             >
-              <i className="fab fa-linkedin-in text-xs mr-2"></i> LinkedIn
+              <i className="fab fa-whatsapp mr-2 text-xl" />
+              <span className="text-sm">WhatsApp</span>
             </a>
             <a
-              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`}
+              href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block px-4 py-2 text-green-500 hover:bg-green-100"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label="Share on LinkedIn"
             >
-              <i className="fab fa-whatsapp text-xs mr-2"></i> WhatsApp
+              <i className="fab fa-linkedin mr-2 text-xl" />
+              <span className="text-sm">LinkedIn</span>
+            </a>
+            <a
+              href={`https://www.instagram.com/?url=${encodeURIComponent(url)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label="Share on Instagram"
+            >
+              <i className="fab fa-instagram mr-2 text-xl" />
+              <span className="text-sm">Instagram</span>
             </a>
             <button
               onClick={handleCopy}
-              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className="p-2 flex items-center text-gray-700 hover:bg-gray-100"
+              aria-label={copied ? "Link copied" : "Copy link"}
             >
-              <i className="fas fa-link text-xs mr-2"></i> {copied ? "Copied!" : "Copy Link"}
+              <i className={`fas ${copied ? 'fa-check' : 'fa-link'} mr-2 text-xl`} />
+              <span className="text-sm">{copied ? 'Copied!' : 'Copy Link'}</span>
             </button>
-            {copied && (
-              <span className="text-green-500 text-sm ml-2">Link copied!</span>
-            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      {/* Font Selector */}
+      <div className="relative">
+        <button
+          ref={fontButtonRef}
+          onClick={() => setShowFontDropdown(!showFontDropdown)}
+          className="p-2 bg-gray-800 text-white rounded-sm flex items-center gap-2 hover:bg-gray-900 transition-colors"
+        >
+          <i className="fas fa-font mr-2"></i>
+          <i className="fas fa-chevron-down ml-2 text-xs"></i>
+        </button>
+
+        {showFontDropdown && (
+          <div
+            ref={dropdownRef}
+            className="absolute left-0 mt-1 w-48 bg-white shadow-lg rounded-md border border-gray-400 z-10 py-1 max-h-60 overflow-auto"
+          >
+            {fonts.map((font, index) => (
+              <button
+                key={font.name}
+                onClick={() => changeFont(index)}
+                className={`block w-full text-left px-4 py-2 text-sm ${currentFontIndex === index ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'}`}
+                style={{ fontFamily: font.value }}
+              >
+                {font.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Text Size Selector */}
+      <div className="relative">
+        <button
+          ref={sizeButtonRef}
+          onClick={() => setShowSizeDropdown(!showSizeDropdown)}
+          className="p-2 bg-gray-800 text-white rounded-sm flex items-center gap-2 hover:bg-gray-900 transition-colors"
+        >
+          <i className="fas fa-text-height mr-2"></i>
+          <i className="fas fa-chevron-down ml-2 text-xs"></i>
+        </button>
+
+        {showSizeDropdown && (
+          <div
+            ref={dropdownRef}
+            className="absolute left-0 mt-1 w-48 bg-white shadow-lg rounded-md border border-gray-400 z-10 py-1"
+          >
+            {textSizes.map((size, index) => (
+              <button
+                key={size.name}
+                onClick={() => changeTextSize(index)}
+                className={`block w-full text-left px-4 py-2 text-sm ${currentTextSizeIndex === index ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'} ${size.class.split(' ')[0]}`}
+              >
+                {size.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FacebookComment from "./FacebookComment";
@@ -16,6 +16,7 @@ const BlogDetails = () => {
   const [advert, setAdvert] = useState("");
   const [error, setError] = useState(null);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const contentRef = useRef(null);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString("en-US", {
@@ -115,25 +116,26 @@ const BlogDetails = () => {
             />
 
             {/* Share Controls */}
-            <div>
-              <ShareControls
-                title={post.title}
-                url={window.location.href}
-                description={advert.replace(/<[^>]+>/g, "").slice(0, 120)}
-                media={
-                  post.media && post.media.length > 0
-                    ? post.media[0].media_url
-                    : `${API_URL}/static/images/Breakingnews.png`
-                }
-              />
-            </div>
+            <ShareControls
+              title={post.title}
+              url={window.location.href}
+              description={advert.replace(/<[^>]+>/g, "").slice(0, 120)}
+              media={
+                post.media && post.media.length > 0
+                  ? post.media[0].media_url
+                  : `${API_URL}/static/images/Breakingnews.png`
+              }
+              contentRef={contentRef}
+            />
 
             {/* Content */}
-            <div id="contentContainer" className="py-0 overflow-hidden my-8">
-              <p
-                className="leading-relaxed text-lg md:text-xl text-gray-800"
-                style={{ maxWidth: "1050px", margin: "auto", lineHeight: "1.75" }}
-              >
+            <div 
+              id="contentContainer" 
+              className="py-0 overflow-hidden my-8" 
+              ref={contentRef}
+              style={{ maxWidth: "1050px", margin: "auto", lineHeight: "1.75" }}
+            >
+              <p className="leading-relaxed text-gray-800">
                 <span
                   dangerouslySetInnerHTML={{
                     __html: advert.replace(/\n/g, "<br>"),

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaBars, FaTimes, FaSearch, FaUser, FaUserPlus } from "react-icons/fa";
 import StoryView from "./Story/StoryView";
@@ -19,33 +20,30 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-white border-b border-green-600 shadow-sm z-50 font-robotoCondensed">
+        {/* Mobile Header */}
         <div className="container mx-auto flex justify-between items-center p-4 md:hidden">
-          {/* Mobile Header */}
           <div className="flex items-center justify-between w-full">
-            {/* Logo */}
-            <a href="/" className="flex-shrink-0">
+            <Link to="/" className="flex-shrink-0">
               <img
                 src={`${API_URL}/static/images/logoheader.png`}
                 alt="Newstropy Logo"
                 className="h-10"
               />
-            </a>
+            </Link>
 
-            {/* Auth Centered */}
             <div className="flex flex-col items-center justify-center flex-grow">
               <div className="flex space-x-3">
-                <a href="/signin" className="flex flex-col items-center text-green-600">
+                <Link to="/signin" className="flex flex-col items-center text-green-600">
                   <FaUser size={20} />
                   <span className="text-xs text-gray-700">Sign In</span>
-                </a>
-                <a href="/register" className="flex flex-col items-center text-green-600">
+                </Link>
+                <Link to="/register/step-one" className="flex flex-col items-center text-green-600">
                   <FaUserPlus size={20} />
                   <span className="text-xs text-gray-700">Register</span>
-                </a>
+                </Link>
               </div>
             </div>
 
-            {/* Search & Menu */}
             <div className="flex space-x-4 items-center">
               <button className="text-green-600">
                 <FaSearch size={20} />
@@ -57,58 +55,56 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Desktop Layout */}
+        {/* Desktop Header */}
         <div className="hidden md:flex justify-between items-center px-4 py-2">
-          {/* Logo */}
-          <a href="/">
+          <Link to="/">
             <img
               src={`${API_URL}/static/images/logoheader.png`}
               alt="Newstropy Logo"
               className="h-12"
             />
-          </a>
+          </Link>
 
-          {/* Categories */}
           <nav className="flex items-center space-x-6 uppercase font-bold text-sm">
             {navbarCategories.slice(0, categoryLimit).map((category, index) => (
-              <a
+              <Link
                 key={index}
-                href={`/category/${category.toLowerCase()}`}
+                to={`/category/${category.toLowerCase()}`}
                 className="text-gray-800 hover:underline"
               >
                 {category}
-              </a>
+              </Link>
             ))}
             {navbarCategories.length > categoryLimit && (
               <div className="relative group">
                 <button className="text-gray-800 hover:underline">More</button>
                 <div className="absolute left-0 bg-white border mt-2 shadow-lg rounded hidden group-hover:block">
                   {navbarCategories.slice(categoryLimit).map((category, index) => (
-                    <a
+                    <Link
                       key={index}
-                      href={`/category/${category.toLowerCase()}`}
+                      to={`/category/${category.toLowerCase()}`}
                       className="block px-4 py-2 text-green-600 hover:bg-gray-100"
                     >
                       {category}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>
             )}
           </nav>
 
-          {/* Auth */}
+          {/* Auth Section */}
           <div className="flex items-center space-x-6">
             <div className="flex flex-col items-center">
-              <a href="/signin" className="text-green-600">
+              <Link to="/signin" className="text-green-600">
                 <FaUser size={24} />
-              </a>
+              </Link>
               <p className="text-gray-800 text-sm">Sign In</p>
             </div>
             <div className="flex flex-col items-center">
-              <a href="/register" className="text-green-600">
+              <Link to="/register/step-one" className="text-green-600">
                 <FaUserPlus size={24} />
-              </a>
+              </Link>
               <p className="text-gray-800 text-sm">Register</p>
             </div>
           </div>
@@ -134,32 +130,30 @@ const Header = () => {
               <FaTimes size={30} />
             </button>
 
-            {/* Auth Buttons in Mobile Menu */}
-            <div className="sm: hidden flex space-x-6 mt-6">
+            <div className="flex space-x-6 mt-6">
               <div className="flex flex-col items-center">
-                <a href="/signin" className="text-white">
+                <Link to="/signin" className="text-white">
                   <FaUser size={30} />
-                </a>
+                </Link>
                 <p className="text-white text-sm mt-2">Sign In</p>
               </div>
               <div className="flex flex-col items-center">
-                <a href="/register" className="text-white">
+                <Link to="/register/step-one" className="text-white">
                   <FaUserPlus size={30} />
-                </a>
+                </Link>
                 <p className="text-white text-sm mt-2">Register</p>
               </div>
             </div>
 
-            {/* Navigation Links */}
             <ul className="space-y-4 text-lg font-semibold mt-10">
               {navbarCategories.map((category, index) => (
                 <li key={index}>
-                  <a
-                    href={`/category/${category.toLowerCase()}`}
+                  <Link
+                    to={`/category/${category.toLowerCase()}`}
                     className="hover:underline"
                   >
                     {category}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -167,7 +161,7 @@ const Header = () => {
         )}
       </header>
 
-      {/* Stories */}
+      {/* Stories Component */}
       <StoryView />
     </>
   );
