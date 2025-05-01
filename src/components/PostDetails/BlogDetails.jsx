@@ -128,7 +128,8 @@ const BlogDetails = () => {
             <ShareControls
               title={post.title}
               url={window.location.href}
-              lead={post.lead.replace(/<[^>]+>/g, "")}  // No truncation, using the full lead
+              lead={post.lead ? post.lead.replace(/<[^>]+>/g, "") : ""}
+ 
               media={post.media && post.media.length > 0
                 ? post.media[0].media_url
                 : `${API_URL}/static/images/Breakingnews.png`}
