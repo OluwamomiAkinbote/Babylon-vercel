@@ -34,11 +34,11 @@ const BlogDetails = () => {
     if (!slug) return;
 
     axios
-      .get(`${API_URL}/news/${slug}/`)  
+      .get(`${API_URL}/news/${slug}/`)
       .then((response) => {
         if (response.data && response.data.post) {
           setPost(response.data.post);
-          setSeoData(response.data.seo);  
+          setSeoData(response.data.seo);
           setAdvert(response.data.advert);
         } else {
           setError("Post not found.");
@@ -86,6 +86,15 @@ const BlogDetails = () => {
               {post.title}
             </h2>
 
+            {/* Lead Paragraph (Bordered) */}
+            {post.lead && (
+              <div className="border-l-4 border-green-700 bg-green-50 px-4 py-3 mb-6 rounded-md">
+                <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
+                  {post.lead}
+                </p>
+              </div>
+            )}
+
             {/* Author & Date */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center font-poppins">
               <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-gray-700 font-medium">
@@ -119,19 +128,19 @@ const BlogDetails = () => {
             <ShareControls
               title={post.title}
               url={window.location.href}
-              description={advert.replace(/<[^>]+>/g, "").slice(0, 120)}
-              media={
-                post.media && post.media.length > 0
-                  ? post.media[0].media_url
-                  : `${API_URL}/static/images/Breakingnews.png`
-              }
+              lead={post.lead.replace(/<[^>]+>/g, "")}  // No truncation, using the full lead
+              media={post.media && post.media.length > 0
+                ? post.media[0].media_url
+                : `${API_URL}/static/images/Breakingnews.png`}
               contentRef={contentRef}
+              slug={post.slug}
             />
 
+
             {/* Content */}
-            <div 
-              id="contentContainer" 
-              className="py-0 overflow-hidden my-8" 
+            <div
+              id="contentContainer"
+              className="py-0 overflow-hidden my-8"
               ref={contentRef}
               style={{ maxWidth: "1050px", margin: "auto", lineHeight: "1.75" }}
             >

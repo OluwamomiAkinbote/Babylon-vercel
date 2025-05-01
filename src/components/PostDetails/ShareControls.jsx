@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const ShareControls = ({ title, url, contentRef }) => {
+const ShareControls = ({ title, url, lead, contentRef, slug }) => {
   const [showShareDropdown, setShowShareDropdown] = useState(false);
   const [showFontDropdown, setShowFontDropdown] = useState(false);
   const [showSizeDropdown, setShowSizeDropdown] = useState(false);
@@ -47,11 +47,38 @@ const ShareControls = ({ title, url, contentRef }) => {
   }, []);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(`${title}\n${url}`).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+    
+    const baseUrl = typeof window !== "undefined" ? window.location.origin : "https://www.newstropy.online";
+    const shortLink = `${baseUrl}/news/${slug}`;
+
+    // Prepare the full text to copy
+    let textToCopy = `${lead}\n\n${shortLink}`;
+
+    // Check for available space and truncate for Twitter (max 280 chars)
+    const maxTwitterChars = 280;
+    const remainingChars = maxTwitterChars - shortLink.length - 2; // 2 for \n\n
+
+    if (textToCopy.length > maxTwitterChars) {
+        // For text truncation: trim the lead text to fit the character limit
+        let allowedLeadLength = remainingChars > 0 ? remainingChars : 0;
+        let trimmedLead = lead.slice(0, allowedLeadLength);
+        
+        // Trim to the last full word
+        const lastSpaceIndex = trimmedLead.lastIndexOf(" ");
+        if (lastSpaceIndex > -1) {
+            trimmedLead = trimmedLead.slice(0, lastSpaceIndex);
+        }
+
+        // Final copy text for Twitter
+        textToCopy = `${trimmedLead}...\n\n${shortLink}`;
+    }
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     });
-  };
+};
+
 
   const handleClickOutside = (e) => {
     if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -222,7 +249,7 @@ const ShareControls = ({ title, url, contentRef }) => {
               <button
                 key={size.name}
                 onClick={() => changeTextSize(index)}
-                className={`block w-full text-left px-4 py-2 text-sm ${currentTextSizeIndex === index ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'} ${size.class.split(' ')[0]}`}
+                className={`block w-full text-left px-4 py-2 text-sm ${currentTextSizeIndex === index ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'}`}
               >
                 {size.name}
               </button>
