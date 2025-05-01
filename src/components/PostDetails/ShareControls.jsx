@@ -55,7 +55,7 @@ const ShareControls = ({ title, url, lead, contentRef, slug }) => {
     let textToCopy = `${lead}\n\n${shortLink}`;
 
     // Check for available space and truncate for Twitter (max 280 chars)
-    const maxTwitterChars = 280;
+    const maxTwitterChars = 330;
     const remainingChars = maxTwitterChars - shortLink.length - 2; // 2 for \n\n
 
     if (textToCopy.length > maxTwitterChars) {
