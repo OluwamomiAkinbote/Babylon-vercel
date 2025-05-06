@@ -61,7 +61,7 @@ const SportTechNews = () => {
         </button>
         <span className="py-2 px-1 text-gray-400">|</span>
         <button
-          className={`py-2 px-4 font-medium text-md ${
+          className={`py-2 px-4 font-medium text-sm ${
             activeTab === "tech"
               ? "text-red-600 border-b-2 border-red-600"
               : "text-gray-600 hover:text-gray-800"
@@ -80,7 +80,7 @@ const SportTechNews = () => {
           <div className="col-span-1">
             {currentPosts[0] && (
               <div>
-                <h2 className="text-xl font-medium text-gray-800 mb-2">
+                <h2 className="sm:text-lg font-medium text-gray-800 mb-2">
                   <a
                     href={`/news/${currentPosts[0].slug}`}
                     className="hover:underline"
@@ -125,7 +125,7 @@ const SportTechNews = () => {
                     <h3 className="font-medium mb-1">
                       <a
                         href={`/news/${post.slug}`}
-                        className="hover:underline text-lg md:text-md font-medium text-gray-800"
+                        className="hover:underline sm:text-md font-medium text-gray-800"
                       >
                         {post.title}
                       </a>

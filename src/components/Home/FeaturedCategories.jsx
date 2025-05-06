@@ -55,7 +55,7 @@ const FeaturedCategories = () => {
                 />
                 <a
                   href={`/news/${posts[0].slug}`}
-                  className="text-lg font-medium mb-2 text-gray-800 hover:underline block"
+                  className="sm:text-md font-medium mb-2 text-gray-800 hover:underline block"
                 >
                   {posts[0].title}
                 </a>
@@ -69,7 +69,7 @@ const FeaturedCategories = () => {
                 <div key={post.id}>
                   <a
                     href={`/news/${post.slug}`}
-                    className="text-lg font-medium mb-2 text-gray-800 hover:underline block"
+                    className="text-md font-medium mb-2 text-gray-800 hover:underline block"
                   >
                     {post.title}
                   </a>

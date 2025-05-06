@@ -86,14 +86,14 @@ const GlobalNews = () => {
                     />
                   </div>
                   <div className="p-4">
-                    <a
-                      href={`/news/${post.slug}`}
-                      className="text-lg font-medium mb-2 text-gray-800 hover:underline block"
-                    >
-                      {post.title.length > 70
-                        ? post.title.substring(0, 70) + "..."
-                        : post.title}
-                    </a>
+                  <a
+                    href={`/news/${post.slug}`}
+                    className="text-md font-medium mb-2 text-gray-800 hover:underline block"
+                  >
+                      {post.title} {/* Show the full title */}
+                  </a>
+
+
                     <p className="text-sm text-gray-600">
                       {formatDate(post.date)}
                     </p>

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import './scroll-marquee.css'
 
 const StoriesHeader = ({ stories, onStoryClick }) => {
     const containerRef = useRef(null);
@@ -119,11 +120,17 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
                                     />
                                 )}
                             </div>
-                            <div className="max-w-[120px] mx-auto px-1 text-center">
-                                <p className="text-sm font-semibold leading-snug break-words">
-                                    {story.title}
-                                </p>
+                            <div className="max-w-[120px] h-5 overflow-hidden text-center scroll-marquee">
+                                <div className="scroll-marquee-wrapper">
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                    <span className="text-sm font-semibold">{story.title}</span>
+                                </div>
                             </div>
+
                         </div>
                     );
                 })}
