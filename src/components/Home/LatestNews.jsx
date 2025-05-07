@@ -6,9 +6,9 @@ import { API_URL } from "../config";
 
 const LatestNews = () => {
   const [mainPost, setMainPost] = useState(null);
-  const [nonExclusivePosts, setNonExclusivePosts] = useState([]);
+  const [politicsPosts, setPoliticsPosts] = useState([]);
   const [exclusivePosts, setExclusivePosts] = useState([]);
-  const [nonExclusiveIndex, setNonExclusiveIndex] = useState(0);
+  const [politicsIndex, setPoliticsIndex] = useState(0);
   const [exclusiveIndex, setExclusiveIndex] = useState(0);
   const postsPerPage = 5;
 
@@ -34,21 +34,21 @@ const LatestNews = () => {
       .get(`${API_URL}/main-exclusive/`)
       .then((response) => {
         setMainPost(response.data.main_post);
-        setNonExclusivePosts(response.data.non_exclusive_posts || []);
+        setPoliticsPosts(response.data.politics_posts || []);
         setExclusivePosts(response.data.exclusive_posts || []);
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const nextNonExclusive = () => {
-    if (nonExclusiveIndex + postsPerPage < nonExclusivePosts.length) {
-      setNonExclusiveIndex(nonExclusiveIndex + postsPerPage);
+  const nextPolitics = () => {
+    if (politicsIndex + postsPerPage < politicsPosts.length) {
+      setPoliticsIndex(politicsIndex + postsPerPage);
     }
   };
 
-  const prevNonExclusive = () => {
-    if (nonExclusiveIndex - postsPerPage >= 0) {
-      setNonExclusiveIndex(nonExclusiveIndex - postsPerPage);
+  const prevPolitics = () => {
+    if (politicsIndex - postsPerPage >= 0) {
+      setPoliticsIndex(politicsIndex - postsPerPage);
     }
   };
 
@@ -69,7 +69,7 @@ const LatestNews = () => {
   };
 
   return (
-    <div className="px-2 py-4 bg-white font-poppins">
+    <div className="px-2 py-4 bg-white font-robotoCondensed">
       {/* Heading Section */}
       <div className="section">
         <div className="heading">
@@ -96,7 +96,7 @@ const LatestNews = () => {
                 </span>
               </div>
               <div className="mt-4">
-                <a href={`/news/${mainPost.slug}`} className="text-xl md:2xl font-medium text-gray-800 hover:underline font-robotoCondensed">
+                <a href={`/news/${mainPost.slug}`} className="sm:text-lg font-medium text-gray-800 hover:underline font-robotoCondensed">
                   {mainPost.title.length > 80 ? mainPost.title.substring(0, 80) + "..." : mainPost.title}
                 </a>
                 <div className="meta text-xs text-gray-600 flex flex-col gap-2 mt-2">
@@ -110,7 +110,7 @@ const LatestNews = () => {
                     <i className="fas fa-clock text-red-500 text-[0.8rem] mr-1"></i>
                     <p className="text-gray-700 text-sm">{formatDate(mainPost.date)}</p>
                   </div>
-                  <p className="text-gray-600 mt-2 text-xl  font-normal ">
+                  <p className="text-gray-600 mt-2 text-lg  font-normal ">
                     {stripHtml(mainPost.content)?.slice(0, 160) + "..."}
                   </p>
                   <a href={`/news/${mainPost.slug}`} className="text-red-600 hover:underline mt-4 block rounded-md shadow w-2/4 p-2 capitalize font-semibold bg-gray-200 text-lg">
@@ -122,11 +122,11 @@ const LatestNews = () => {
           </div>
         )}
 
-        {/* Non-Exclusive Posts */}
+        {/* Politics Posts */}
         <div className="col-span-1 other_posts grid grid-cols-1 gap-2 pt-4 relative">
-          {nonExclusivePosts.length > 0 ? (
+          {politicsPosts.length > 0 ? (
             <>
-              {nonExclusivePosts.slice(nonExclusiveIndex, nonExclusiveIndex + postsPerPage).map((post) => (
+              {politicsPosts.slice(politicsIndex, politicsIndex + postsPerPage).map((post) => (
                 <div key={post.id} className="flex items-center justify-center border-b pb-4">
                   <div className="w-[120px] h-[86px] flex-shrink-0">
                     <MediaRenderer 
@@ -136,7 +136,7 @@ const LatestNews = () => {
                     />
                   </div>
                   <div className="md:w-2/3 sm:w-full ml-4">
-                    <a href={`/news/${post.slug}`} className="md:text-xl text-lg font-medium text-gray-900 hover:underline block mb-2">
+                    <a href={`/news/${post.slug}`} className="sm:text-md font-medium text-gray-900 hover:underline block mb-2">
                       {post.title.length > 75 ? post.title.substring(0, 75) + "..." : post.title}
                     </a>
                     <div className="flex items-center text-gray-700 text-sm">
@@ -148,19 +148,19 @@ const LatestNews = () => {
               ))}
               <div className="flex justify-end mt-2 space-x-2">
                 <button
-                  onClick={prevNonExclusive}
-                  disabled={nonExclusiveIndex === 0}
+                  onClick={prevPolitics}
+                  disabled={politicsIndex === 0}
                   className={`p-1 rounded ${
-                    nonExclusiveIndex === 0 ? "text-gray-400" : "text-gray-700 hover:bg-gray-100"
+                    politicsIndex === 0 ? "text-gray-400" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
-                  onClick={nextNonExclusive}
-                  disabled={nonExclusiveIndex + postsPerPage >= nonExclusivePosts.length}
+                  onClick={nextPolitics}
+                  disabled={politicsIndex + postsPerPage >= politicsPosts.length}
                   className={`p-1 rounded ${
-                    nonExclusiveIndex + postsPerPage >= nonExclusivePosts.length ? "text-gray-400" : "text-gray-700 hover:bg-gray-100"
+                    politicsIndex + postsPerPage >= politicsPosts.length ? "text-gray-400" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <ChevronRight size={20} />
@@ -168,7 +168,7 @@ const LatestNews = () => {
               </div>
             </>
           ) : (
-            <p>No non-exclusive posts available.</p>
+            <p>No politics posts available.</p>
           )}
         </div>
 
@@ -178,8 +178,8 @@ const LatestNews = () => {
             <>
               {exclusivePosts.slice(exclusiveIndex, exclusiveIndex + postsPerPage).map((post) => (
                 <div key={post.id} className="mb-4 border-b pb-4">
-                  <a href={`/news/${post.slug}`} className="md:text-xl text-lg font-medium text-gray-900 hover:underline block mb-2">
-                    {post.title.length > 80 ? post.title.substring(0, 80) + "..." : post.title}
+                  <a href={`/news/${post.slug}`} className="sm:text-md font-medium text-gray-900 hover:underline block mb-2">
+                    {post.title }
                   </a>
                   <div className="flex items-center text-gray-700 text-sm">
                     <i className="fas fa-clock text-red-500 text-xs mr-1"></i>

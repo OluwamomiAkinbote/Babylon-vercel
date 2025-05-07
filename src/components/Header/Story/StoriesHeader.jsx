@@ -120,14 +120,11 @@ const StoriesHeader = ({ stories, onStoryClick }) => {
                                     />
                                 )}
                             </div>
-                            <div className="max-w-[120px] h-5 overflow-hidden text-center scroll-marquee">
-                                <div className="scroll-marquee-wrapper">
-                                    <span className="text-sm font-semibold">{story.title}</span>
-                                    <span className="text-sm font-semibold">{story.title}</span>
-                                    <span className="text-sm font-semibold">{story.title}</span>
-                                    <span className="text-sm font-semibold">{story.title}</span>
-                                    <span className="text-sm font-semibold">{story.title}</span>
-                                    <span className="text-sm font-semibold">{story.title}</span>
+                            <div className="max-w-[120px] h-5 overflow-hidden scroll-marquee">
+                                <div className="scroll-marquee-wrapper whitespace-nowrap">
+                                    <span className="text-md font-normal inline-block">
+                                        {story.title + " • " + story.title + " • "}
+                                    </span>
                                 </div>
                             </div>
 

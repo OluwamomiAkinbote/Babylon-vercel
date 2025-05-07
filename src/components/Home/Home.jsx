@@ -15,7 +15,7 @@ const Home = () => {
                 <Hero />
               </div>
               
-              <div className="font-barlow">
+              <div className="font-robotoCondensed">
                 <LatestNews />
               </div>
 

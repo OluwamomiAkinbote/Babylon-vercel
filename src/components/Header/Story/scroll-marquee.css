@@ -1,20 +1,9 @@
 @keyframes scrollText {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-
-.scroll-marquee {
-  position: relative;
-  overflow: hidden;
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .scroll-marquee-wrapper {
-  display: flex;
-  animation: scrollText 15s linear infinite;
-}
-
-.scroll-marquee span {
   display: inline-block;
-  white-space: nowrap;
-  padding-right: 100%; /* Optional, to add some space between the words */
+  animation: scrollText 15s linear infinite;
 }
