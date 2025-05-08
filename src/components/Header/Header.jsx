@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FaBars, FaTimes, FaSearch, FaUser, FaUserPlus } from "react-icons/fa";
-import StoryView from "./Story/StoryView";
+import { ChevronDown } from "lucide-react";
 import { API_URL } from "../config";
+import StoryView from "./Story/StoryView";
+import MediaRenderer from "../Home/MediaRenderer";
 
 const Header = () => {
   const [navbarCategories, setNavbarCategories] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const categoryLimit = 5;
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const handleMediaClick = (slug) => {
+    console.log(`Media clicked with slug: ${slug}`);
+    // Add navigation logic here if needed
+  };
 
   useEffect(() => {
     axios
@@ -20,151 +27,145 @@ const Header = () => {
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-white border-b border-green-600 shadow-sm z-50 font-robotoCondensed">
+
         {/* Mobile Header */}
         <div className="container mx-auto flex justify-between items-center p-4 md:hidden">
-          <div className="flex items-center justify-between w-full">
-            <Link to="/" className="flex-shrink-0">
-              <img
-                src={`${API_URL}/static/images/logoheader.png`}
-                alt="Newstropy Logo"
-                className="h-10"
-              />
-            </Link>
-
-            <div className="flex flex-col items-center justify-center flex-grow">
-              <div className="flex space-x-3">
-                <Link to="/signin" className="flex flex-col items-center text-green-600">
-                  <FaUser size={20} />
-                  <span className="text-xs text-gray-700">Sign In</span>
-                </Link>
-                <Link to="/register/step-one" className="flex flex-col items-center text-green-600">
-                  <FaUserPlus size={20} />
-                  <span className="text-xs text-gray-700">Register</span>
-                </Link>
-              </div>
-            </div>
-
-            <div className="flex space-x-4 items-center">
-              <button className="text-green-600">
-                <FaSearch size={20} />
-              </button>
-              <button className="text-green-600" onClick={() => setMenuOpen(!menuOpen)}>
-                <FaBars size={24} />
-              </button>
-            </div>
+          <Link to="/">
+            <img src={`${API_URL}/static/images/logoheader.png`} alt="Logo" className="h-10" />
+          </Link>
+          <div className="flex items-center space-x-4">
+            <Link to="/signin"><FaUser size={20} className="text-green-600" /></Link>
+            <Link to="/register/step-one"><FaUserPlus size={20} className="text-green-600" /></Link>
+            <button onClick={() => setMenuOpen(true)} className="text-green-600">
+              <FaBars size={24} />
+            </button>
           </div>
         </div>
 
         {/* Desktop Header */}
-        <div className="hidden md:flex justify-between items-center px-4 py-2">
+        <div className="hidden md:flex justify-between items-center px-4 py-2 container mx-auto">
           <Link to="/">
-            <img
-              src={`${API_URL}/static/images/logoheader.png`}
-              alt="Newstropy Logo"
-              className="h-12"
-            />
+            <img src={`${API_URL}/static/images/logoheader.png`} alt="Logo" className="h-12" />
           </Link>
 
-          <nav className="flex items-center space-x-6 uppercase font-bold text-sm">
-            {navbarCategories.slice(0, categoryLimit).map((category, index) => (
-              <Link
-                key={index}
-                to={`/category/${category.toLowerCase()}`}
-                className="text-gray-800 hover:underline"
+          <nav className="flex space-x-6 text-sm font-semibold uppercase relative">
+            {navbarCategories.map((cat, idx) => (
+              <div 
+                key={idx} 
+                className="relative group"
+                onMouseEnter={() => setActiveDropdown(idx)}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
-                {category}
-              </Link>
-            ))}
-            {navbarCategories.length > categoryLimit && (
-              <div className="relative group">
-                <button className="text-gray-800 hover:underline">More</button>
-                <div className="absolute left-0 bg-white border mt-2 shadow-lg rounded hidden group-hover:block">
-                  {navbarCategories.slice(categoryLimit).map((category, index) => (
-                    <Link
-                      key={index}
-                      to={`/category/${category.toLowerCase()}`}
-                      className="block px-4 py-2 text-green-600 hover:bg-gray-100"
-                    >
-                      {category}
-                    </Link>
-                  ))}
-                </div>
+                <Link to={`/category/${cat.slug}`} className="flex items-center gap-1 text-gray-800 hover:text-green-600">
+                  {cat.name}
+                  {cat.has_subcategories && <ChevronDown size={14} />}
+                </Link>
               </div>
-            )}
+            ))}
           </nav>
 
-          {/* Auth Section */}
-          <div className="flex items-center space-x-6">
-            <div className="flex flex-col items-center">
-              <Link to="/signin" className="text-green-600">
-                <FaUser size={24} />
-              </Link>
-              <p className="text-gray-800 text-sm">Sign In</p>
+          <div className="flex items-center space-x-4">
+            <Link to="/signin" className="text-green-600"><FaUser size={24} /></Link>
+            <Link to="/register/step-one" className="text-green-600"><FaUserPlus size={24} /></Link>
+            <div className="bg-gray-100 border border-gray-300 rounded-full px-4 py-1 flex items-center">
+              <FaSearch className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                placeholder="Search"
+                className="bg-transparent focus:outline-none text-gray-800 w-32"
+              />
             </div>
-            <div className="flex flex-col items-center">
-              <Link to="/register/step-one" className="text-green-600">
-                <FaUserPlus size={24} />
-              </Link>
-              <p className="text-gray-800 text-sm">Register</p>
-            </div>
-          </div>
-
-          {/* Search */}
-          <div className="flex items-center bg-gray-100 border border-gray-300 rounded-full px-4 py-1 space-x-2">
-            <FaSearch className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-transparent focus:outline-none text-gray-800"
-            />
           </div>
         </div>
 
+        {/* Desktop Dropdown */}
+        {activeDropdown !== null && (
+          <div
+            className="hidden md:block absolute top-full left-0 w-full bg-white border-t border-green-600 shadow-xl z-40"
+            onMouseEnter={() => setActiveDropdown(activeDropdown)}
+            onMouseLeave={() => setActiveDropdown(null)}
+          >
+            <div className="container mx-auto">
+              {navbarCategories.map((cat, idx) => (
+                <div 
+                  key={idx} 
+                  className={`${activeDropdown === idx ? 'block' : 'hidden'} py-6`}
+                >
+                  {cat.has_subcategories && (
+                    <div className="max-w-6xl mx-auto flex px-6 gap-6">
+                      <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r pr-0 md:pr-4">
+                        <h4 className="text-green-600 font-semibold mb-3">Subcategories</h4>
+                        <ul className="space-y-2">
+                          {cat.subcategories.map((sub, i) => (
+                            <li key={i}>
+                              <Link to={`/category/${sub.slug}`} className="text-gray-700 hover:text-green-700 text-sm">
+                                {sub.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <h4 className="col-span-1 sm:col-span-2 text-green-600 font-semibold">Latest Posts</h4>
+                        {cat.latest_posts.map((post, i) => (
+                          <div
+                            key={i}
+                            onClick={() => handleMediaClick(post.slug)}
+                            className="cursor-pointer group flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition items-center"
+                          >
+                            <div className="w-24 h-16 rounded overflow-hidden flex-shrink-0">
+                              <MediaRenderer
+                                media={post.media}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 text-sm font-medium text-gray-800 group-hover:text-green-700 line-clamp-2">
+                              {post.title}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Mobile Menu Overlay */}
         {menuOpen && (
-          <div className="fixed inset-0 bg-black text-white flex flex-col items-center justify-center z-50">
-            <button
-              className="absolute top-4 right-4 text-white"
-              onClick={() => setMenuOpen(false)}
-            >
+          <div className="fixed inset-0 bg-white text-black z-50 flex flex-col p-6">
+            <button className="absolute top-4 right-4 text-green-600" onClick={() => setMenuOpen(false)}>
               <FaTimes size={30} />
             </button>
-
-            <div className="flex space-x-6 mt-6">
-              <div className="flex flex-col items-center">
-                <Link to="/signin" className="text-white">
-                  <FaUser size={30} />
-                </Link>
-                <p className="text-white text-sm mt-2">Sign In</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <Link to="/register/step-one" className="text-white">
-                  <FaUserPlus size={30} />
-                </Link>
-                <p className="text-white text-sm mt-2">Register</p>
-              </div>
-            </div>
-
-            <ul className="space-y-4 text-lg font-semibold mt-10">
-              {navbarCategories.map((category, index) => (
-                <li key={index}>
-                  <Link
-                    to={`/category/${category.toLowerCase()}`}
-                    className="hover:underline"
-                  >
-                    {category}
+            <div className="mt-10 space-y-4">
+              {navbarCategories.map((cat, index) => (
+                <div key={index}>
+                  <Link to={`/category/${cat.slug}`} className="font-semibold text-lg">
+                    {cat.name}
                   </Link>
-                </li>
+                  {cat.has_subcategories && (
+                    <ul className="ml-4 mt-2 space-y-1 text-sm text-gray-700">
+                      {cat.subcategories.map((sub, i) => (
+                        <li key={i}>
+                          <Link to={`/category/${sub.slug}`}>{sub.name}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
       </header>
 
-      {/* Stories Component */}
       <StoryView />
     </>
   );
 };
 
 export default Header;
+

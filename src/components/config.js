@@ -1,4 +1,4 @@
-const ENV = "production"; 
+const ENV = import.meta.env.MODE || "production"; 
 
 const LOCAL_API = "http://127.0.0.1:8000";
 const LIVE_API = "https://ayo.newstropy.online";
