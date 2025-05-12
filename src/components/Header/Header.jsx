@@ -11,6 +11,7 @@ const Header = () => {
   const [navbarCategories, setNavbarCategories] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [closeTimeout, setCloseTimeout] = useState(null);
 
   const handleMediaClick = (slug) => {
     console.log(`Media clicked with slug: ${slug}`);
@@ -53,8 +54,13 @@ const Header = () => {
               <div 
                 key={idx} 
                 className="relative group"
-                onMouseEnter={() => setActiveDropdown(idx)}
-                onMouseLeave={() => setActiveDropdown(null)}
+                onMouseEnter={() => {
+                  if (closeTimeout) clearTimeout(closeTimeout);
+                  setActiveDropdown(idx);
+                }}
+                onMouseLeave={() => {
+                  setCloseTimeout(setTimeout(() => setActiveDropdown(null), 200));
+                }}
               >
                 <Link to={`/category/${cat.slug}`} className="flex items-center gap-1 text-gray-800 hover:text-green-600">
                   {cat.name}
@@ -78,12 +84,17 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Desktop Dropdown */}
+        {/* Desktop Dropdown - Keeping your original structure */}
         {activeDropdown !== null && (
           <div
             className="hidden md:block absolute top-full left-0 w-full bg-white border-t border-green-600 shadow-xl z-40"
-            onMouseEnter={() => setActiveDropdown(activeDropdown)}
-            onMouseLeave={() => setActiveDropdown(null)}
+            onMouseEnter={() => {
+              if (closeTimeout) clearTimeout(closeTimeout);
+              setActiveDropdown(activeDropdown);
+            }}
+            onMouseLeave={() => {
+              setCloseTimeout(setTimeout(() => setActiveDropdown(null), 300));
+            }}
           >
             <div className="container mx-auto">
               {navbarCategories.map((cat, idx) => (
@@ -168,4 +179,3 @@ const Header = () => {
 };
 
 export default Header;
-

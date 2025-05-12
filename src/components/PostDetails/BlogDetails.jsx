@@ -55,7 +55,7 @@ const BlogDetails = () => {
 
   return (
     <>
-      <OGSEO seoData={seoData} />
+      <OGSEO seoData={seoData} key={seoData.url} />
       <div className="bg-white font-robotoCondensed ">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 overflow-hidden">
           <div className="p-2 sm:col-span-2 overflow-hidden ">
