@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import FacebookComment from "./FacebookComment";
 import { API_URL } from "../config";
-import OGSEO from "./OGSEO";
+import MetaTags from "./MetaTags";
 import ShareControls from "./ShareControls";
 import BlogMedia from "./BlogMedia";
 
@@ -55,7 +55,16 @@ const BlogDetails = () => {
 
   return (
     <>
-      <OGSEO seoData={seoData} key={seoData.url} />
+      <MetaTags
+
+        title={seoData.title}
+        description={seoData.description}
+        imageUrl={seoData.image_url}
+        url={seoData.url}
+        type="article" // Special typ
+      
+      
+      />
       <div className="bg-white font-robotoCondensed ">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 overflow-hidden">
           <div className="p-2 sm:col-span-2 overflow-hidden ">
