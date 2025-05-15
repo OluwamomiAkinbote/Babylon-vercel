@@ -105,7 +105,7 @@ const Header = () => {
                   {cat.has_subcategories && (
                     <div className="max-w-6xl mx-auto flex px-6 gap-6">
                       <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r pr-0 md:pr-4">
-                        <h4 className="text-green-600 font-semibold mb-3">Subcategories</h4>
+                        <h4 className="text-green-600 font-semibold mb-3">Browse {cat.name}</h4>
                         <ul className="space-y-2">
                           {cat.subcategories.map((sub, i) => (
                             <li key={i}>
@@ -118,20 +118,20 @@ const Header = () => {
                       </div>
 
                       <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <h4 className="col-span-1 sm:col-span-2 text-green-600 font-semibold">Latest Posts</h4>
+                        <h4 className="col-span-1 sm:col-span-2 text-green-600 font-semibold">Latest News</h4>
                         {cat.latest_posts.map((post, i) => (
                           <div
                             key={i}
                             onClick={() => handleMediaClick(post.slug)}
-                            className="cursor-pointer group flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition items-center"
+                            className="cursor-pointer group flex gap-3 hover:bg-gray-50 p-2  transition items-center"
                           >
-                            <div className="w-24 h-16 rounded overflow-hidden flex-shrink-0">
+                            <div className="w-24 h-16 overflow-hidden flex-shrink-0">
                               <MediaRenderer
                                 media={post.media}
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <div className="flex-1 text-sm font-medium text-gray-800 group-hover:text-green-700 line-clamp-2">
+                            <div className="flex-1 text-md font-medium text-gray-800 group-hover:text-green-700">
                               {post.title}
                             </div>
                           </div>
