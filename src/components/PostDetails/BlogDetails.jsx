@@ -7,6 +7,8 @@ import MetaTags from "./MetaTags";
 import ShareControls from "./ShareControls";
 import BlogMedia from "./BlogMedia";
 
+const currentUrl = window.location.href;
+
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -48,7 +50,7 @@ const BlogDetails = () => {
       });
   }, [slug]);
 
-  useEffect(() => {
+    useEffect(() => {
     // Inject Google Analytics gtag.js
     const existingScript = document.querySelector(
       'script[src="https://www.googletagmanager.com/gtag/js?id=G-Z47KJ59Y0L"]'
@@ -70,9 +72,8 @@ const BlogDetails = () => {
     }
   }, []);
 
-  if (error)
-    return <div className="text-center p-4 text-red-600">{error}</div>;
 
+  if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
   if (!post) return null;
 
   return (
@@ -168,14 +169,14 @@ const BlogDetails = () => {
               title={post.title}
               url={window.location.href}
               lead={post.lead ? post.lead.replace(/<[^>]+>/g, "") : ""}
-              media={
-                post.media && post.media.length > 0
-                  ? post.media[0].media_url
-                  : `${API_URL}/static/images/Breakingnews.png`
-              }
+ 
+              media={post.media && post.media.length > 0
+                ? post.media[0].media_url
+                : `${API_URL}/static/images/Breakingnews.png`}
               contentRef={contentRef}
               slug={post.slug}
             />
+
 
             {/* Content */}
             <div
@@ -195,7 +196,7 @@ const BlogDetails = () => {
 
             {/* Comments */}
             <div className="mt-6">
-              <FacebookComment url={window.location.href} />
+              <FacebookComment url={currentUrl} />
             </div>
           </div>
 
