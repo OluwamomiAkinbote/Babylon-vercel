@@ -7,8 +7,6 @@ import MetaTags from "./MetaTags";
 import ShareControls from "./ShareControls";
 import BlogMedia from "./BlogMedia";
 
-const currentUrl = window.location.href;
-
 const BlogDetails = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -50,21 +48,53 @@ const BlogDetails = () => {
       });
   }, [slug]);
 
-  if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
+  useEffect(() => {
+    // Inject Google Analytics gtag.js
+    const existingScript = document.querySelector(
+      'script[src="https://www.googletagmanager.com/gtag/js?id=G-Z47KJ59Y0L"]'
+    );
+    if (!existingScript) {
+      const script1 = document.createElement("script");
+      script1.src = "https://www.googletagmanager.com/gtag/js?id=G-Z47KJ59Y0L";
+      script1.async = true;
+      document.head.appendChild(script1);
+
+      const script2 = document.createElement("script");
+      script2.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Z47KJ59Y0L');
+      `;
+      document.head.appendChild(script2);
+    }
+  }, []);
+
+  if (error)
+    return <div className="text-center p-4 text-red-600">{error}</div>;
+
   if (!post) return null;
 
   return (
     <>
-      <MetaTags
+      {(seoData || post) && (
+        <MetaTags
+          title={seoData?.title || post?.title || "Default Title | Your Site"}
+          description={
+            seoData?.description ||
+            post?.lead ||
+            "Default description for your site"
+          }
+          imageUrl={
+            seoData?.image_url ||
+            (post?.media && post.media.length > 0
+              ? post.media[0].media_url
+              : `${API_URL}/static/images/Breakingnews.png`)
+          }
+          url={seoData?.url || window.location.href}
+        />
+      )}
 
-        title={seoData.title}
-        description={seoData.description}
-        imageUrl={seoData.image_url}
-        url={seoData.url}
-        type="article" // Special typ
-      
-      
-      />
       <div className="bg-white font-robotoCondensed ">
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 overflow-hidden">
           <div className="p-2 sm:col-span-2 overflow-hidden ">
@@ -138,14 +168,14 @@ const BlogDetails = () => {
               title={post.title}
               url={window.location.href}
               lead={post.lead ? post.lead.replace(/<[^>]+>/g, "") : ""}
- 
-              media={post.media && post.media.length > 0
-                ? post.media[0].media_url
-                : `${API_URL}/static/images/Breakingnews.png`}
+              media={
+                post.media && post.media.length > 0
+                  ? post.media[0].media_url
+                  : `${API_URL}/static/images/Breakingnews.png`
+              }
               contentRef={contentRef}
               slug={post.slug}
             />
-
 
             {/* Content */}
             <div
@@ -165,7 +195,7 @@ const BlogDetails = () => {
 
             {/* Comments */}
             <div className="mt-6">
-              <FacebookComment url={currentUrl} />
+              <FacebookComment url={window.location.href} />
             </div>
           </div>
 

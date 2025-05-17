@@ -1,12 +1,21 @@
 import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 
-const MetaTags = ({ 
+const MetaTags = ({
   title = "Default Title | Your Site",
   description = "Default description for your site",
   imageUrl = "/default-og-image.jpg",
-  url = window.location.href,
+  url = null,
   type = "website",
 }) => {
+  const [currentUrl, setCurrentUrl] = useState(url);
+
+  useEffect(() => {
+    if (!url && typeof window !== "undefined") {
+      setCurrentUrl(window.location.href);
+    }
+  }, [url]);
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -17,7 +26,7 @@ const MetaTags = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={currentUrl || ""} />
       <meta property="og:type" content={type} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
